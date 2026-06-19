@@ -3,7 +3,7 @@ import type { SdkRoot } from "./sdk-types.js";
 
 export type WorkerEnv = {
   INVISIBLE_COORDINATOR_WS_URL: string;
-  INVISIBLE_REQUIRED_MODE: "dev" | "prod" | "auto";
+  INVISIBLE_REQUIRED_MODE: string;
   INVISIBLE_RELEASE_MRTD: string;
   INVISIBLE_INTEL_ROOT_FINGERPRINT: string;
   DEMO_DESTINATION_ADDRESS: string;
@@ -96,7 +96,7 @@ export function buildCoordinatorPool(env: WorkerEnv): CoordinatorPoolConfig {
       {
         wsUrl: env.INVISIBLE_COORDINATOR_WS_URL,
         expectedHostname: endpoint.hostname,
-        requiredMode: env.INVISIBLE_REQUIRED_MODE,
+        requiredMode: readRequiredMode(env.INVISIBLE_REQUIRED_MODE),
         releasePin: {
           mrtd: env.INVISIBLE_RELEASE_MRTD,
           intelRootFingerprint: env.INVISIBLE_INTEL_ROOT_FINGERPRINT,
@@ -119,6 +119,11 @@ function assertLamports(value: number): number {
     throw new Error("amountLamports must be a positive safe integer.");
   }
   return value;
+}
+
+function readRequiredMode(value: string): "dev" | "prod" | "auto" {
+  if (value === "dev" || value === "prod" || value === "auto") return value;
+  throw new Error("INVISIBLE_REQUIRED_MODE must be dev, prod, or auto");
 }
 
 async function loadSdk() {

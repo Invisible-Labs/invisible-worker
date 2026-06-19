@@ -16,4 +16,13 @@ if (!pin?.mrtd || !pin.intelRootFingerprint) {
   throw new Error("coordinator release pin must include mrtd and intelRootFingerprint");
 }
 
+try {
+  buildCoordinatorPool({ ...env, INVISIBLE_REQUIRED_MODE: "" });
+  throw new Error("attestation mode must fail closed");
+} catch (error) {
+  if (!(error instanceof Error) || !error.message.includes("INVISIBLE_REQUIRED_MODE")) {
+    throw error;
+  }
+}
+
 console.log("worker contract ok");
