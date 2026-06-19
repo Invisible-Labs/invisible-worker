@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit",
     "build": "tsc --noEmit",
     "simulate": "tsx scripts/simulate.ts",
+    "check:contract": "tsx scripts/check-contract.ts",
     "prepare:sdk": "tsx scripts/prepare-sdk-imports.ts",
     "verify:sdk": "tsx scripts/verify-sdk.ts",
     "cf-typegen": "npx wrangler types",

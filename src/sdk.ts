@@ -5,7 +5,9 @@ export type WorkerEnv = {
   INVISIBLE_COORDINATOR_WS_URL: string;
   INVISIBLE_REQUIRED_MODE: "dev" | "prod" | "auto";
   INVISIBLE_RELEASE_MRTD: string;
+  INVISIBLE_INTEL_ROOT_FINGERPRINT: string;
   DEMO_DESTINATION_ADDRESS: string;
+  INVISIBLE_WORKER_API_KEY?: string;
 };
 
 export type CoordinatorPoolConfig = {
@@ -13,7 +15,7 @@ export type CoordinatorPoolConfig = {
     wsUrl: string;
     expectedHostname: string;
     requiredMode: "dev" | "prod" | "auto";
-    releasePin: { mrtd: string };
+    releasePin: { mrtd: string; intelRootFingerprint: string };
   }>;
   allowedRoles?: string[];
   preferLeader?: boolean;
@@ -95,7 +97,10 @@ export function buildCoordinatorPool(env: WorkerEnv): CoordinatorPoolConfig {
         wsUrl: env.INVISIBLE_COORDINATOR_WS_URL,
         expectedHostname: endpoint.hostname,
         requiredMode: env.INVISIBLE_REQUIRED_MODE,
-        releasePin: { mrtd: env.INVISIBLE_RELEASE_MRTD },
+        releasePin: {
+          mrtd: env.INVISIBLE_RELEASE_MRTD,
+          intelRootFingerprint: env.INVISIBLE_INTEL_ROOT_FINGERPRINT,
+        },
       },
     ],
     allowedRoles: ["leader"],
