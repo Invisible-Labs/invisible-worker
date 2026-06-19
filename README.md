@@ -1,5 +1,18 @@
 # Invisible Worker
 
-Cloudflare Worker server example for Invisible private transfers.
+Cloudflare Worker example for server-side Invisible private transfers.
 
-Implementation lives in pull requests.
+```bash
+npm ci
+npm run dev
+```
+
+Routes:
+
+```txt
+GET /health
+GET /sdk
+POST /private-transfer
+```
+
+Set secrets with Wrangler. Do not commit secrets.
