@@ -6,6 +6,7 @@ export type WorkerEnv = {
   INVISIBLE_REQUIRED_MODE: string;
   INVISIBLE_RELEASE_MRTD: string;
   INVISIBLE_INTEL_ROOT_FINGERPRINT: string;
+  INVISIBLE_ALLOW_MISSING_DCAP_COLLATERAL?: string;
   DEMO_DESTINATION_ADDRESS: string;
   INVISIBLE_WORKER_API_KEY?: string;
 };
@@ -15,7 +16,11 @@ export type CoordinatorPoolConfig = {
     wsUrl: string;
     expectedHostname: string;
     requiredMode: "dev" | "prod" | "auto";
-    releasePin: { mrtd: string; intelRootFingerprint: string };
+    releasePin: {
+      mrtd: string;
+      intelRootFingerprint: string;
+      allowMissingDcapCollateral?: boolean;
+    };
   }>;
   allowedRoles?: string[];
   preferLeader?: boolean;
@@ -90,16 +95,25 @@ export function buildCoordinatorPool(env: WorkerEnv): CoordinatorPoolConfig {
   if (endpoint.protocol !== "wss:" && endpoint.protocol !== "ws:") {
     throw new Error("INVISIBLE_COORDINATOR_WS_URL must use ws:// or wss://");
   }
+  const requiredMode = readRequiredMode(env.INVISIBLE_REQUIRED_MODE);
+  const allowMissingDcapCollateral = readBoolean(
+    env.INVISIBLE_ALLOW_MISSING_DCAP_COLLATERAL,
+    false,
+  );
+  if (requiredMode === "prod" && allowMissingDcapCollateral) {
+    throw new Error("INVISIBLE_ALLOW_MISSING_DCAP_COLLATERAL is only allowed outside prod mode");
+  }
 
   return {
     endpoints: [
       {
         wsUrl: env.INVISIBLE_COORDINATOR_WS_URL,
         expectedHostname: endpoint.hostname,
-        requiredMode: readRequiredMode(env.INVISIBLE_REQUIRED_MODE),
+        requiredMode,
         releasePin: {
           mrtd: env.INVISIBLE_RELEASE_MRTD,
           intelRootFingerprint: env.INVISIBLE_INTEL_ROOT_FINGERPRINT,
+          ...(allowMissingDcapCollateral ? { allowMissingDcapCollateral: true } : {}),
         },
       },
     ],
@@ -124,6 +138,11 @@ function assertLamports(value: number): number {
 function readRequiredMode(value: string): "dev" | "prod" | "auto" {
   if (value === "dev" || value === "prod" || value === "auto") return value;
   throw new Error("INVISIBLE_REQUIRED_MODE must be dev, prod, or auto");
+}
+
+function readBoolean(value: string | undefined, fallback: boolean): boolean {
+  if (value === undefined) return fallback;
+  return value === "true" || value === "1";
 }
 
 async function loadSdk() {
