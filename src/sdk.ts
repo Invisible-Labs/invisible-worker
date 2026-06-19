@@ -1,19 +1,5 @@
-type SdkSession = { readonly attested?: boolean };
-type SdkRoot = {
-  createSession(options: { coordinator: CoordinatorPoolConfig; storage?: unknown }): Promise<SdkSession>;
-  normalizeError?(error: unknown, fallback?: string): string;
-};
-type SdkUser = {
-  contractRequest(
-    session: SdkSession,
-    args: {
-      amountLamports: number;
-      payoutPolicy: PayoutPolicy;
-      sync?: boolean;
-    },
-  ): Promise<AcceptanceReceipt>;
-};
-type SdkStorage = { inMemoryStorage?(): unknown };
+import { loadSdkBundle } from "./sdk-imports.generated.js";
+import type { SdkRoot } from "./sdk-types.js";
 
 export type WorkerEnv = {
   INVISIBLE_COORDINATOR_WS_URL: string;
@@ -130,18 +116,8 @@ function assertLamports(value: number): number {
   return value;
 }
 
-async function loadSdk(): Promise<{ root: SdkRoot; user: SdkUser; storage: SdkStorage } | null> {
-  try {
-    const scope = "@invisible";
-    const [root, user, storage] = await Promise.all([
-      import(`${scope}/sdk`) as Promise<SdkRoot>,
-      import(`${scope}/sdk/user`) as Promise<SdkUser>,
-      import(`${scope}/sdk/storage`) as Promise<SdkStorage>,
-    ]);
-    return { root, user, storage };
-  } catch {
-    return null;
-  }
+async function loadSdk() {
+  return loadSdkBundle();
 }
 
 function normalizeSdkError(sdk: SdkRoot, error: unknown): string {

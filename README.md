@@ -16,3 +16,11 @@ POST /private-transfer
 ```
 
 Set secrets with Wrangler. Do not commit secrets.
+
+When `@invisible/sdk` is available:
+
+```bash
+INVISIBLE_SDK_PACKAGE=latest npm run verify:sdk
+npm run prepare:sdk
+npm run deploy
+```
