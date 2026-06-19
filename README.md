@@ -26,7 +26,7 @@ INVISIBLE_INTEL_ROOT_FINGERPRINT=
 INVISIBLE_WORKER_API_KEY=
 ```
 
-The SDK requires DCAP collateral by default. For a legacy non-production coordinator that does not emit collateral yet, set `INVISIBLE_ALLOW_MISSING_DCAP_COLLATERAL=true`. The example rejects that flag in `prod` mode.
+The SDK requires DCAP collateral by default. Production examples need a coordinator that emits `dcap_collateral` or a compatible attestation manifest. For legacy previews only, set `INVISIBLE_ALLOW_MISSING_DCAP_COLLATERAL=true`; this maps to `releasePin.allowMissingDcapCollateral` and is rejected in `prod` mode.
 
 `POST /private-transfer` requires `Authorization: Bearer <INVISIBLE_WORKER_API_KEY>`.
 
@@ -37,3 +37,5 @@ INVISIBLE_SDK_PACKAGE=latest npm run verify:sdk
 npm run prepare:sdk
 npm run deploy
 ```
+
+`npm run verify:sdk` installs `@invisible/sdk` in a temporary consumer project. It must pass from the published or packaged SDK artifact, not from local monorepo paths or generated FROST files.
