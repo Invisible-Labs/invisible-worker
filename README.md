@@ -28,6 +28,8 @@ INVISIBLE_WORKER_API_KEY=
 
 The SDK requires DCAP collateral by default. Production examples need a coordinator that emits `dcap_collateral` or a compatible attestation manifest. For legacy previews only, set `INVISIBLE_ALLOW_MISSING_DCAP_COLLATERAL=true`; this maps to `releasePin.allowMissingDcapCollateral` and is rejected in `prod` mode.
 
+If the configured coordinator is still on an older wire contract, this preview can fail before a transfer is created. Once the matching coordinator and wire-contract rollout is live, the SDK package and coordinator will speak the same message names and payload shapes.
+
 `POST /private-transfer` requires `Authorization: Bearer <INVISIBLE_WORKER_API_KEY>`.
 
 When `@invisible/sdk` is available:
