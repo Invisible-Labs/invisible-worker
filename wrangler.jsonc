@@ -1,0 +1,18 @@
+{
+  "name": "invisible-worker",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-06-19",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  "vars": {
+    "INVISIBLE_COORDINATOR_WS_URL": "wss://coordinator.example/ws-noise",
+    "INVISIBLE_REQUIRED_MODE": "dev",
+    "INVISIBLE_RELEASE_MRTD": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "INVISIBLE_INTEL_ROOT_FINGERPRINT": "0000000000000000000000000000000000000000000000000000000000000000",
+    "INVISIBLE_ALLOW_MISSING_DCAP_COLLATERAL": "false",
+    "DEMO_DESTINATION_ADDRESS": "11111111111111111111111111111111"
+  }
+}

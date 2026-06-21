@@ -1,0 +1,30 @@
+{
+  "name": "invisible-worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "dev": "npx wrangler dev",
+    "deploy": "npx wrangler deploy",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc --noEmit",
+    "simulate": "tsx scripts/simulate.ts",
+    "check:contract": "tsx scripts/check-contract.ts",
+    "prepare:sdk": "tsx scripts/prepare-sdk-imports.ts",
+    "verify:sdk": "tsx scripts/verify-sdk.ts",
+    "cf-typegen": "npx wrangler types",
+    "audit:high": "npm audit --audit-level=high"
+  },
+  "optionalDependencies": {
+    "@invisible/sdk": "npm:@invisible-labs/sdk@0.1.0-dev.1.2"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "4.20260612.1",
+    "@types/node": "24.10.3",
+    "tsx": "4.21.0",
+    "typescript": "5.9.3"
+  }
+}
