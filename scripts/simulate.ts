@@ -25,6 +25,16 @@ const transfer = await worker.fetch(
 );
 if (transfer.status !== 503) throw new Error("private transfer should fail closed without SDK");
 
+const lp = await worker.fetch(
+  new Request("https://worker.example/lp", {
+    method: "POST",
+    headers: { authorization: "Bearer test-key" },
+    body: JSON.stringify({ action: "recover", positionCode: "lp-code" }),
+  }),
+  env,
+);
+if (lp.status !== 503) throw new Error("LP route should fail closed without SDK");
+
 const unauthorized = await worker.fetch(
   new Request("https://worker.example/private-transfer", {
     method: "POST",

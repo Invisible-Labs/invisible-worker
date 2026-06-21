@@ -16,11 +16,12 @@ async function writeGeneratedLoader(usePackage: boolean): Promise<void> {
     ? [
         'import * as root from "@invisible/sdk";',
         'import * as user from "@invisible/sdk/user";',
+        'import * as lp from "@invisible/sdk/lp";',
         'import * as storage from "@invisible/sdk/storage";',
         'import type { SdkBundle } from "./sdk-types.js";',
         "",
         "export async function loadSdkBundle(): Promise<SdkBundle | null> {",
-        "  return { root, user, storage };",
+        "  return { root, user, storage, lp };",
         "}",
         "",
       ]

@@ -19,7 +19,7 @@
     "audit:high": "npm audit --audit-level=high"
   },
   "optionalDependencies": {
-    "@invisible/sdk": "0.0.0"
+    "@invisible/sdk": "npm:@invisible-labs/sdk@0.1.0-dev.1.2"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "4.20260612.1",

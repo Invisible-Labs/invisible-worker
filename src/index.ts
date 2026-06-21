@@ -1,5 +1,12 @@
 import { HttpError, json, readJsonBody } from "./http.js";
-import { sdkStatus, startPrivateTransfer, type PrivateTransferRequest, type WorkerEnv } from "./sdk.js";
+import {
+  runLpAction,
+  sdkStatus,
+  startPrivateTransfer,
+  type LpActionRequest,
+  type PrivateTransferRequest,
+  type WorkerEnv,
+} from "./sdk.js";
 
 export default {
   async fetch(request: Request, env: WorkerEnv): Promise<Response> {
@@ -19,6 +26,13 @@ export default {
         const input = await readJsonBody<PrivateTransferRequest>(request);
         const result = await startPrivateTransfer(env, input);
         return json(result, { status: statusForTransfer(result.status) });
+      }
+
+      if (request.method === "POST" && url.pathname === "/lp") {
+        await requireBearerToken(request, env);
+        const input = await readJsonBody<LpActionRequest>(request);
+        const result = await runLpAction(env, input);
+        return json(result, { status: statusForLp(result.status) });
       }
 
       return json({ error: "not_found" }, { status: 404 });
@@ -63,6 +77,23 @@ async function timingSafeEqual(a: string, b: string): Promise<boolean> {
 function statusForTransfer(status: string): number {
   switch (status) {
     case "accepted":
+      return 202;
+    case "sdk_missing":
+      return 503;
+    case "sdk_not_ready":
+      return 501;
+    case "failed":
+      return 502;
+    default:
+      return 500;
+  }
+}
+
+function statusForLp(status: string): number {
+  switch (status) {
+    case "position":
+    case "funding":
+    case "withdrawal":
       return 202;
     case "sdk_missing":
       return 503;
